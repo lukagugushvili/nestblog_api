@@ -41,7 +41,6 @@ export class BlogPostController {
     return this.blogPostService.getById(id);
   }
 
-  @UseGuards(BlogPostsGuard)
   @Get()
   getAll(): Promise<BlogPost[]> {
     return this.blogPostService.getAll();
