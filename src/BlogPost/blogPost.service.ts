@@ -4,6 +4,7 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogPost } from './schema/blogPost-schema';
@@ -11,6 +12,7 @@ import { Model } from 'mongoose';
 import { CreateBlogPostDto } from './dto/blogPost-create-dto';
 import { BlogPostQueryParamsDto } from './dto/blogPost-query-params-dto';
 import { UpdateBlogPostDto } from './dto/blogPost-update-dto';
+import { BlogPostsGuard } from 'src/guard/blogPosts.guard';
 
 @Injectable()
 export class BlogPostService {
