@@ -4,7 +4,7 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
-  UseGuards,
+  OnModuleInit,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogPost } from './schema/blogPost-schema';
@@ -12,10 +12,34 @@ import { Model } from 'mongoose';
 import { CreateBlogPostDto } from './dto/blogPost-create-dto';
 import { BlogPostQueryParamsDto } from './dto/blogPost-query-params-dto';
 import { UpdateBlogPostDto } from './dto/blogPost-update-dto';
-import { BlogPostsGuard } from 'src/guard/blogPosts.guard';
+import { faker } from '@faker-js/faker';
 
 @Injectable()
-export class BlogPostService {
+export class BlogPostService implements OnModuleInit {
+  // seeder
+  async onModuleInit() {
+    try {
+      const count = await this.blogPostModel.countDocuments();
+
+      if (count === 0 || count < 10) {
+        const postsBox = [];
+        for (let i = 0; i < 100; i++) {
+          const post: BlogPost = {
+            title: faker.lorem.sentence(),
+            content: faker.lorem.paragraphs(3),
+            author: faker.name.fullName(),
+          };
+          postsBox.push(post);
+        }
+        await this.blogPostModel.insertMany(postsBox);
+      }
+
+      console.log(`Documents count: ${count}`);
+    } catch (error) {
+      console.log('error initializing module:', error);
+    }
+  }
+
   constructor(
     @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPost>,
   ) {}
